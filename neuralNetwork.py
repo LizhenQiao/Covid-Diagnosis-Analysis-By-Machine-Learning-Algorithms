@@ -2,12 +2,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional
 import pandas
-import numpy as np
 import load_data
-from sklearn.preprocessing import label_binarize
 
 
-def preprocess_data(filepath, folder):
+def preprocess_data():
     train_data, train_labels, test_data, test_labels, vld_data, vld_labels = load_data.load_data(
         'corona_tested_individuals_ver_006.english.csv')
     origin_test_labels = test_labels
@@ -84,8 +82,7 @@ def test(test_data, test_labels, model):
 if __name__ == "__main__":
     test_prediction = []
     test_prob = []
-    train_data, train_labels, test_data, test_labels, origin_test_labels = preprocess_data(
-        'a3digits.zip', 'data')
+    train_data, train_labels, test_data, test_labels, origin_test_labels = preprocess_data()
     model, loss_fn, optim = setup_model()
     train_model(train_data, train_labels, model, loss_fn, optim, 100)
     test(test_data, test_labels, model)
