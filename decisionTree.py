@@ -24,7 +24,6 @@ def adaboosted_decision_tree(train_data, train_labels, test_data, test_labels, n
 
 
 if __name__ == "__main__":
-    test_prediction = []
     train_data, train_labels, test_data, test_labels, vld_data, vld_labels = load_data.load_data(
         'corona_tested_individuals_ver_006.english.csv')
 
