@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch.nn.functional
 import pandas
 import load_data
+import numpy as np
+from evaluationUtils import evaluate
 
 
 def preprocess_data():
@@ -70,8 +72,7 @@ def test(test_data, test_labels, model):
             if torch.argmax(y_pred.data).item() == torch.argmax(test_labels[i]).item():
                 correct_predictions += 1
             # Store prediction results for q3_3.
-            test_prediction.append(torch.argmax(y_pred.data).item())
-            test_prob.append(y_pred.data.numpy())
+            test_pred.append(torch.argmax(y_pred.data).item())
 
     test_loss = test_loss / len(test_data)
     print('\ntest set loss: {:.7f}, accuracy: {} / {} ({:.2f}%)\n'.format(
@@ -80,9 +81,10 @@ def test(test_data, test_labels, model):
 
 
 if __name__ == "__main__":
-    test_prediction = []
-    test_prob = []
+    test_pred = []
     train_data, train_labels, test_data, test_labels, origin_test_labels = preprocess_data()
     model, loss_fn, optim = setup_model()
     train_model(train_data, train_labels, model, loss_fn, optim, 100)
     test(test_data, test_labels, model)
+    evaluate(y_true=origin_test_labels, y_pred=np.array(
+        test_pred, dtype=np.float), model_name="MLP")

@@ -4,6 +4,7 @@ import load_data
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import label_binarize
+from evaluationUtils import evaluate
 
 
 def single_decision_tree(train_data, train_labels, test_data, test_labels, max_depth):
@@ -18,9 +19,10 @@ def adaboosted_decision_tree(train_data, train_labels, test_data, test_labels, n
     unit_decision_tree = DecisionTreeClassifier(max_depth=max_depth)
     clf = AdaBoostClassifier(unit_decision_tree, n_estimators=n_estimators)
     clf.fit(train_data, train_labels)
+    pred = clf.predict(test_data)
     print("Test Accuracy of adaboosted decision tree: ",
           clf.score(test_data, test_labels))
-    return None
+    return pred
 
 
 if __name__ == "__main__":
@@ -32,5 +34,7 @@ if __name__ == "__main__":
                          test_data, test_labels, 10)
 
     # Adaboost + Decision Tree
-    test_prediction = adaboosted_decision_tree(train_data, train_labels,
-                                               test_data, test_labels, 50, 10)
+    test_pred = adaboosted_decision_tree(train_data, train_labels,
+                                         test_data, test_labels, 50, 10)
+
+    evaluate(y_true=test_labels, y_pred=test_pred, model_name="Decision Tree")
