@@ -5,7 +5,8 @@ from sklearn.model_selection import KFold
 import matplotlib.pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
 from evaluationUtils import evaluate
-import timeit
+import time
+
 
 def cross_validation(train_data, train_labels, k_range=np.arange(1, 16)):
     kf10 = KFold(n_splits=10, shuffle=False)
@@ -48,18 +49,27 @@ def main():
     optimal_k = 11
     optimal_k_avg_accuracy = 0.9601
 
-    start = timeit.default_timer()
+    beforeTrainingTimeStamp = time.time()
     knn = KNeighborsClassifier(n_neighbors=optimal_k)
     knn.fit(train_data, train_labels)
-    stop = timeit.default_timer()
+    afterTrainingTimeStamp = time.time()
 
-    optimal_k_train_score = knn.score(train_data, train_labels)
+    # optimal_k_train_score = knn.score(train_data, train_labels)
     optimal_k_test_score = knn.score(test_data, test_labels)
-    print("k = ", optimal_k, ", train accuracy is: ", optimal_k_train_score, ", the average accuracy across folds is: ",
+    print("k = ", optimal_k,  ", the average accuracy across folds is: ",
           optimal_k_avg_accuracy, ", test accuracy is:", optimal_k_test_score)
+    afterPredictingTimeStamp = time.time()
+    # print("k = ", optimal_k, ", train accuracy is: ", optimal_k_train_score, ", the average accuracy across folds is: ",
+    #       optimal_k_avg_accuracy, ", test accuracy is:", optimal_k_test_score)
     test_pred = knn.predict(test_data)
     evaluate(y_true=test_labels, y_pred=test_pred, model_name="KNN")
-    print('Time: ', stop - start)
+    trainTime = afterTrainingTimeStamp - beforeTrainingTimeStamp
+    predictTime = afterPredictingTimeStamp - afterTrainingTimeStamp
+    totalTime = afterPredictingTimeStamp - beforeTrainingTimeStamp
+    print("Train Time: {}".format(trainTime))
+    print("Predict Time: {}".format(predictTime))
+    print("Total Time: {}".format(totalTime))
+
 
 if __name__ == "__main__":
     main()

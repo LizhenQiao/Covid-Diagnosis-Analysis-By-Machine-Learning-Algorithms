@@ -4,6 +4,7 @@ import torch.nn.functional
 import pandas
 import load_data
 import numpy as np
+import time
 from evaluationUtils import evaluate
 
 
@@ -26,9 +27,9 @@ def preprocess_data():
 def setup_model():
     # model declaration
     model = nn.Sequential(
-        nn.Linear(8, 40),
+        nn.Linear(8, 100),
         nn.ReLU(),
-        nn.Linear(40, 10),
+        nn.Linear(100, 10),
         nn.ReLU(),
         nn.Linear(10, 2)
     )
@@ -84,7 +85,16 @@ if __name__ == "__main__":
     test_pred = []
     train_data, train_labels, test_data, test_labels, origin_test_labels = preprocess_data()
     model, loss_fn, optim = setup_model()
-    train_model(train_data, train_labels, model, loss_fn, optim, 100)
+    beforeTrainingTimeStamp = time.time()
+    train_model(train_data, train_labels, model, loss_fn, optim, 200)
+    afterTrainingTimeStamp = time.time()
     test(test_data, test_labels, model)
+    afterPredictingTimeStamp = time.time()
+    trainTime = afterTrainingTimeStamp - beforeTrainingTimeStamp
+    predictTime = afterPredictingTimeStamp - afterTrainingTimeStamp
+    totalTime = afterPredictingTimeStamp - beforeTrainingTimeStamp
+    print("Train Time: {}".format(trainTime))
+    print("Predict Time: {}".format(predictTime))
+    print("Total Time: {}".format(totalTime))
     evaluate(y_true=origin_test_labels, y_pred=np.array(
         test_pred, dtype=np.float), model_name="MLP")

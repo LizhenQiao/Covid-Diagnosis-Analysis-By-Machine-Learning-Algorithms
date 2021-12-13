@@ -1,15 +1,34 @@
 import load_data
-from sklearn.linear_model import LogisticRegression
+import time
+from sklearn import preprocessing
+from sklearn.linear_model import LogisticRegression, LinearRegression
 
 
 def logisticRegression(train_data, train_labels, test_data, test_labels, penalty):
-    model = LogisticRegression(penalty=penalty)
+    beforeTrainingTimeStamp = time.time()
+    model = LogisticRegression(penalty=penalty, C=1.0)
     # Fit the model
     model.fit(train_data, train_labels)
+    afterTrainingTimeStamp = time.time()
     # Score/Accuracy
     acc_logreg = model.score(test_data, test_labels)
-
+    afterPredictingTimeStamp = time.time()
+    trainTime = afterTrainingTimeStamp - beforeTrainingTimeStamp
+    predictTime = afterPredictingTimeStamp - afterTrainingTimeStamp
+    totalTime = afterPredictingTimeStamp - beforeTrainingTimeStamp
+    print("Train Time: {}".format(trainTime))
+    print("Predict Time: {}".format(predictTime))
+    print("Total Time: {}".format(totalTime))
     print("Logistic Regression Accuracy: {}".format(acc_logreg))
+
+    # Get weights of each feature.
+    X_train_minmax = preprocessing.normalize(train_data)
+    # X_train_minmax = min_max_scaler.fit_transform(train_data)
+    reg = LogisticRegression(penalty=penalty)
+    reg.fit(X_train_minmax, train_labels)
+    print(reg.score(test_data, test_labels))
+    w = reg.coef_
+    print("w: {}".format(w))
 
 
 if __name__ == '__main__':

@@ -4,8 +4,7 @@ from sklearn.neural_network import MLPClassifier
 
 
 def mlp(train_data, train_labels, test_data, test_labels):
-    clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
-                        hidden_layer_sizes=(5, 2), random_state=1)
+    clf = MLPClassifier(random_state=1)
     clf.fit(train_data, train_labels)
     test_pred = clf.predict(test_data)
     acc = clf.score(test_data, test_labels)

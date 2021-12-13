@@ -7,17 +7,15 @@ from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsClassifier
 
 
-
 def load_data(data_dir):
-    df = pd.read_csv (data_dir,low_memory=False)
+    df = pd.read_csv(data_dir, low_memory=False)
 
+    df = df[df['corona_result'] != 'other']
+    df = df[df['age_60_and_above'] != 'None']
+    df = df[df['gender'] != 'None']
+    df = df[df['test_indication'] != 'Abroad']
 
-    df = df[df['corona_result']!='other']
-    df = df[df['age_60_and_above']!='None']
-    df = df[df['gender']!='None']
-    df = df[df['test_indication']!='Abroad']
-
-    e=LabelEncoder()
+    e = LabelEncoder()
     df["cough"] = e.fit_transform(df["cough"])
     df["fever"] = e.fit_transform(df["fever"])
     df["sore_throat"] = e.fit_transform(df["sore_throat"])
@@ -30,10 +28,9 @@ def load_data(data_dir):
     df = df.iloc[:, 1:]
 
 
-
-#print(df.dtypes.value_counts())
-#print(df.describe(include='all'))
-#print(df)
+# print(df.dtypes.value_counts())
+    print(df.describe(include='all'))
+# print(df)
 
     x = df.drop('corona_result', axis=1)
     y = df['corona_result']
@@ -46,8 +43,9 @@ def load_data(data_dir):
     y = np.reshape(y, (-1))
     print(x.shape)
     print(y.shape)
-    x_train, x_tmp, y_train, y_tmp = train_test_split(x, y, test_size = 0.30)
-    x_test, x_vld, y_test, y_vld = train_test_split(x_tmp, y_tmp, test_size = 0.50)
+    x_train, x_tmp, y_train, y_tmp = train_test_split(x, y, test_size=0.30)
+    x_test, x_vld, y_test, y_vld = train_test_split(
+        x_tmp, y_tmp, test_size=0.50)
 
     return(x_train, y_train, x_test, y_test, x_vld, y_vld)
 
