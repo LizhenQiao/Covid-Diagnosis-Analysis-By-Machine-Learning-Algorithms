@@ -1,4 +1,4 @@
-from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, roc_curve, RocCurveDisplay, auc
+from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, plot_roc_curve
 import matplotlib.pyplot as plt
 
 
@@ -14,3 +14,8 @@ def evaluate(y_true, y_pred, model_name):
     print("Precision: {}".format(precision))
     print("Recall: {}".format(recall))
     print("ConfusionMatrix: \n{}".format(confusionMatrix))
+
+
+def visualize_roc_curve(clf, X_test, y_test):
+    plot_roc_curve(clf, X_test, y_test)
+    plt.show()

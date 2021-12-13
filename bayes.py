@@ -1,6 +1,6 @@
 import load_data
 import numpy as np
-from evaluationUtils import evaluate
+from evaluationUtils import evaluate, visualize_roc_curve
 from sklearn.naive_bayes import GaussianNB
 import time
 
@@ -16,6 +16,8 @@ def main():
     acc_bayes = bys.score(test_data, test_labels)
     afterPredictingTimeStamp = time.time()
     test_pred = bys.predict(test_data)
+
+    visualize_roc_curve(bys, test_data, test_labels)
     evaluate(y_true=test_labels, y_pred=test_pred, model_name="Naive Bayes")
     trainTime = afterTrainingTimeStamp - beforeTrainTimeStamp
     predictTime = afterPredictingTimeStamp - afterTrainingTimeStamp

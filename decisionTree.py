@@ -3,7 +3,7 @@ import load_data
 import time
 from sklearn.ensemble import AdaBoostClassifier, BaggingClassifier
 from sklearn.tree import DecisionTreeClassifier
-from evaluationUtils import evaluate
+from evaluationUtils import evaluate, visualize_roc_curve
 
 
 def single_decision_tree(train_data, train_labels, test_data, test_labels, max_depth, criterion):
@@ -21,7 +21,7 @@ def single_decision_tree(train_data, train_labels, test_data, test_labels, max_d
     print("Train Time: {}".format(trainTime))
     print("Predict Time: {}".format(predictTime))
     print("Total Time: {}".format(totalTime))
-    return None
+    return clf
 
 
 def adaboosted_decision_tree(train_data, train_labels, test_data, test_labels, n_estimators, max_depth):
@@ -49,9 +49,9 @@ if __name__ == "__main__":
         'corona_tested_individuals_ver_006.english.csv')
 
     # Decision Tree
-    single_decision_tree(train_data, train_labels,
+    clf = single_decision_tree(train_data, train_labels,
                          test_data, test_labels, 11, criterion='gini')
-
+    visualize_roc_curve(clf, test_data, test_labels)
     # Adaboost + Decision Tree
     test_pred = adaboosted_decision_tree(train_data, train_labels,
                                          test_data, test_labels, 50, 11)

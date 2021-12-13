@@ -5,6 +5,8 @@ from sklearn import svm, metrics
 import numpy as np
 from sklearn.model_selection import GridSearchCV
 import evaluationUtils
+import time
+
 
 def grid_search_fit_and_test(train_data, train_labels, test_data, test_labels):
     gammalist = np.outer(np.logspace(-3, 0, 3), np.array([1, 3])).flatten()
@@ -29,21 +31,30 @@ def grid_search_fit_and_test(train_data, train_labels, test_data, test_labels):
         f"{metrics.classification_report(test_labels, pred)}\n"
     )
 
+
 def svm(train_data, train_labels, test_data, test_labels):
-
-    model1 = SVC(C = 0.1,kernel='rbf',gamma = 3.0)
+    beforeTrainTimeStamp = time.time()
+    model1 = SVC(C=0.1, kernel='rbf', gamma=3.0)
     model1.fit(train_data, train_labels)
-    print("\n 'rbf accuracy:", model1.score(test_data,test_labels) * 100)
+    afterTrainingTimeStamp = time.time()
+    print("\n 'rbf accuracy:", model1.score(test_data, test_labels) * 100)
+    afterPredictingTimeStamp = time.time()
+    trainTime = afterTrainingTimeStamp - beforeTrainTimeStamp
+    predictTime = afterPredictingTimeStamp - afterTrainingTimeStamp
+    totalTime = afterPredictingTimeStamp - beforeTrainTimeStamp
+    print("Train Time: {}".format(trainTime))
+    print("Predict Time: {}".format(predictTime))
+    print("Total Time: {}".format(totalTime))
     return model1
-
 
 
 if __name__ == "__main__":
     train_data, train_labels, test_data, test_labels, vld_data, vld_labels = load_data.load_data(
         'corona_tested_individuals_ver_006.english.csv')
 
-    #grid_search_fit_and_test(train_data, train_labels, vld_data, vld_labels)
-    #best parameters selected: kernel = rbf, C = 0.1, gamma = 3.0
+    # grid_search_fit_and_test(train_data, train_labels, vld_data, vld_labels)
+    # best parameters selected: kernel = rbf, C = 0.1, gamma = 3.0
     svm = svm(train_data, train_labels, test_data, test_labels)
     y_pred = svm.predict(test_data)
-    evaluationUtils.evaluate(test_labels,y_pred,svm)
+    evaluationUtils.visualize_roc_curve(svm, test_data, test_labels)
+    evaluationUtils.evaluate(test_labels, y_pred, svm)

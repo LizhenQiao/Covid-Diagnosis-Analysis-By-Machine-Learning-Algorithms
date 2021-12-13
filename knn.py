@@ -4,7 +4,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
 import matplotlib.pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
-from evaluationUtils import evaluate
+from evaluationUtils import evaluate, visualize_roc_curve
 import time
 
 
@@ -62,6 +62,8 @@ def main():
     # print("k = ", optimal_k, ", train accuracy is: ", optimal_k_train_score, ", the average accuracy across folds is: ",
     #       optimal_k_avg_accuracy, ", test accuracy is:", optimal_k_test_score)
     test_pred = knn.predict(test_data)
+
+    visualize_roc_curve(knn, test_data, test_labels)
     evaluate(y_true=test_labels, y_pred=test_pred, model_name="KNN")
     trainTime = afterTrainingTimeStamp - beforeTrainingTimeStamp
     predictTime = afterPredictingTimeStamp - afterTrainingTimeStamp
