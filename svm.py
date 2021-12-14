@@ -55,6 +55,7 @@ if __name__ == "__main__":
     # grid_search_fit_and_test(train_data, train_labels, vld_data, vld_labels)
     # best parameters selected: kernel = rbf, C = 0.1, gamma = 3.0
     svm = svm(train_data, train_labels, test_data, test_labels)
+    afterTrainingTimeStamp = time.time()
     y_pred = svm.predict(test_data)
     evaluationUtils.visualize_roc_curve(svm, test_data, test_labels)
     evaluationUtils.evaluate(test_labels, y_pred, svm)

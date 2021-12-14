@@ -2,7 +2,7 @@ import load_data
 import time
 from sklearn import preprocessing
 from sklearn.linear_model import LogisticRegression, LinearRegression
-from evaluationUtils import evaluate, visualize_roc_curve
+from evaluationUtils import evaluate
 
 
 def logisticRegression(train_data, train_labels, test_data, test_labels, penalty):
@@ -13,6 +13,9 @@ def logisticRegression(train_data, train_labels, test_data, test_labels, penalty
     afterTrainingTimeStamp = time.time()
     # Score/Accuracy
     acc_logreg = model.score(test_data, test_labels)
+    test_pred = model.predict(test_data)
+    evaluate(y_true=test_labels, y_pred=test_pred,
+             model_name="logistic regression")
     afterPredictingTimeStamp = time.time()
     trainTime = afterTrainingTimeStamp - beforeTrainingTimeStamp
     predictTime = afterPredictingTimeStamp - afterTrainingTimeStamp
@@ -30,15 +33,10 @@ def logisticRegression(train_data, train_labels, test_data, test_labels, penalty
     print(reg.score(test_data, test_labels))
     w = reg.coef_
     print("w: {}".format(w))
-    return model
 
 
 if __name__ == '__main__':
     train_data, train_labels, test_data, test_labels, vld_data, vld_labels = load_data.load_data(
         'corona_tested_individuals_ver_006.english.csv')
 
-    clf = logisticRegression(train_data, train_labels, test_data, test_labels, 'l2')
-    test_pred = clf.predict(test_data)
-
-    visualize_roc_curve(clf, test_data, test_labels)
-    evaluate(y_true=test_labels, y_pred=test_pred, model_name="Decision Tree")
+    logisticRegression(train_data, train_labels, test_data, test_labels, 'l2')
